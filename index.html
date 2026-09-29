@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>A Surprise for Arina</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
@@ -11,7 +11,7 @@
       --bg-dark: #07050a;
       --accent-pink: #ff758c;
       --accent-gold: #f8a5c2;
-      --glass-bg: rgba(20, 12, 28, 0.7);
+      --glass-bg: rgba(20, 12, 28, 0.75);
       --glass-border: rgba(255, 255, 255, 0.15);
     }
 
@@ -21,6 +21,7 @@
       padding: 0;
       user-select: none;
       -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body, html {
@@ -30,6 +31,7 @@
       font-family: 'Montserrat', sans-serif;
       background-color: var(--bg-dark);
       color: #ffffff;
+      position: fixed; /* Prevents scroll bounce on iOS */
     }
 
     #global-bg-canvas {
@@ -61,10 +63,11 @@
       align-items: center;
       opacity: 0;
       visibility: hidden;
-      transform: scale(0.97);
-      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+      transform: scale(0.96);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
       padding: 20px;
       text-align: center;
+      overflow-y: auto; /* Allows safe scrolling inside long sections on small screens */
     }
 
     .section.active {
@@ -78,52 +81,55 @@
       background: linear-gradient(135deg, #ff5e7e, #e84393);
       border: none;
       color: #fff;
-      padding: 16px 45px;
-      font-size: 0.95rem;
+      padding: 14px 36px;
+      font-size: 0.85rem;
       font-weight: 600;
       border-radius: 40px;
       cursor: pointer;
-      box-shadow: 0 10px 30px rgba(232, 67, 147, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.4);
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      margin-top: 25px;
-      letter-spacing: 2px;
+      box-shadow: 0 10px 25px rgba(232, 67, 147, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      margin-top: 20px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
       z-index: 10;
+      touch-action: manipulation;
+      flex-shrink: 0;
     }
 
-    .btn-lux:hover {
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 15px 35px rgba(232, 67, 147, 0.6);
+    .btn-lux:active {
+      transform: scale(0.95);
     }
 
     .sub-title {
-      font-size: 0.75rem;
-      letter-spacing: 4px;
+      font-size: 0.7rem;
+      letter-spacing: 3px;
       color: var(--accent-gold);
       text-transform: uppercase;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       font-weight: 600;
     }
 
     .main-heading {
       font-family: 'Cinzel', serif;
-      font-size: 2.8rem;
+      font-size: 2.2rem;
       font-weight: 700;
       background: linear-gradient(135deg, #ffffff 0%, #f8a5c2 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
+      line-height: 1.2;
     }
 
     .glass-card {
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
-      padding: 50px 40px;
-      border-radius: 28px;
+      padding: 35px 25px;
+      border-radius: 24px;
       backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-      max-width: 460px;
-      width: 100%;
+      max-width: 90%;
+      width: 380px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -133,19 +139,16 @@
     .emoji-trigger-wrap {
       position: relative;
       display: inline-block;
-      margin: 20px 0;
+      margin: 15px 0;
       cursor: pointer;
+      touch-action: manipulation;
     }
 
     .emoji-icon {
-      font-size: 6rem;
+      font-size: 5rem;
       display: inline-block;
       transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      filter: drop-shadow(0 0 25px rgba(255,117,140,0.4));
-    }
-
-    .emoji-trigger-wrap:hover .emoji-icon {
-      transform: scale(1.1) rotate(4deg);
+      filter: drop-shadow(0 0 20px rgba(255,117,140,0.4));
     }
 
     .emoji-icon.pop-joy {
@@ -155,9 +158,9 @@
     @keyframes iosTelegramJoy {
       0% { transform: scale(1) rotate(0deg); }
       30% { transform: scale(0.7) rotate(-15deg); }
-      60% { transform: scale(1.45) rotate(12deg); filter: drop-shadow(0 0 35px rgba(255,215,0,0.9)); }
+      60% { transform: scale(1.3) rotate(12deg); filter: drop-shadow(0 0 35px rgba(255,215,0,0.9)); }
       80% { transform: scale(0.95) rotate(-4deg); }
-      100% { transform: scale(1.2) rotate(0deg); filter: drop-shadow(0 0 40px rgba(255,117,140,0.9)); }
+      100% { transform: scale(1.15) rotate(0deg); filter: drop-shadow(0 0 40px rgba(255,117,140,0.9)); }
     }
 
     .burst-sparkle {
@@ -172,48 +175,51 @@
       100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
     }
 
-    /* TREE CANVAS */
+    /* CANVAS RESPONSIVENESS */
     #tree-canvas {
       width: 100%;
-      max-width: 850px;
-      height: 520px;
+      max-width: 450px;
+      height: 380px;
       filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
     }
 
-    /* REALISTIC CAKE CANVAS */
     #cake-canvas {
-      width: 420px;
-      height: 440px;
+      width: 100%;
+      max-width: 320px;
+      height: 340px;
       filter: drop-shadow(0 20px 35px rgba(0,0,0,0.8));
     }
 
-    /* BALLOONS CANVAS */
     #balloon-canvas {
       width: 100%;
-      max-width: 750px;
-      height: 280px;
+      max-width: 380px;
+      height: 180px;
       cursor: pointer;
+      touch-action: manipulation;
     }
 
     .reasons-container {
       width: 100%;
-      max-width: 520px;
+      max-width: 380px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-top: 15px;
+      gap: 10px;
+      margin-top: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 5px;
     }
 
     .reason-card {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 14px 20px;
-      border-radius: 16px;
-      font-size: 0.9rem;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 0.8rem;
       text-align: left;
       opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(15px);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       backdrop-filter: blur(10px);
     }
 
@@ -226,51 +232,49 @@
 
     .gallery-stage {
       display: flex;
-      gap: 25px;
-      padding: 30px 10px;
+      gap: 15px;
+      padding: 20px 10px;
       width: 100%;
-      max-width: 700px;
+      max-width: 100%;
       overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
     }
 
     .gallery-stage::-webkit-scrollbar { display: none; }
 
     .polaroid-3d {
-      min-width: 220px;
+      min-width: 200px;
       background: #ffffff;
-      padding: 14px 14px 25px 14px;
-      border-radius: 6px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-      transform: rotateY(-6deg);
-      transition: transform 0.5s ease;
-    }
-
-    .polaroid-3d:hover {
-      transform: rotateY(0deg) scale(1.05) translateY(-8px);
+      padding: 12px 12px 20px 12px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      scroll-snap-align: center;
+      flex-shrink: 0;
     }
 
     .polaroid-img-frame {
       width: 100%;
-      height: 220px;
+      height: 180px;
       background-size: cover;
       background-position: center;
-      border-radius: 3px;
+      border-radius: 4px;
     }
 
     .polaroid-caption {
       font-family: 'Caveat', cursive;
       color: #222;
-      font-size: 1.4rem;
-      margin-top: 12px;
+      font-size: 1.3rem;
+      margin-top: 10px;
       text-align: center;
       font-weight: 700;
     }
 
     .envelope-wrapper {
       position: relative;
-      width: 280px;
-      height: 180px;
+      width: 240px;
+      height: 150px;
       background: #d4a373;
       border-radius: 12px;
       cursor: pointer;
@@ -278,25 +282,33 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      transition: transform 0.4s ease;
+      touch-action: manipulation;
     }
 
-    .envelope-wrapper:hover { transform: scale(1.05); }
-
     .letter-modal {
-      position: absolute;
+      position: fixed;
+      top: 5%;
+      left: 5%;
+      right: 5%;
+      bottom: 5%;
       width: 90%;
-      max-width: 480px;
+      height: 90%;
+      max-width: 440px;
+      margin: auto;
       background: #fffdf9;
       color: #2c2c2c;
-      padding: 40px;
+      padding: 25px 20px;
       border-radius: 20px;
       box-shadow: 0 25px 60px rgba(0,0,0,0.8);
       opacity: 0;
-      transform: scale(0.7) translateY(50px);
-      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: scale(0.8) translateY(30px);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       pointer-events: none;
-      z-index: 20;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto;
     }
 
     .letter-modal.open {
@@ -325,10 +337,10 @@
     <!-- SEC 1: UNWRAP -->
     <div class="section active" id="sec-1">
       <div class="glass-card">
-        <div style="font-size: 3.5rem; margin-bottom: 15px;">🎁</div>
+        <div style="font-size: 3rem; margin-bottom: 10px;">🎁</div>
         <div class="sub-title">A PRIVATE EXPERIENCE FOR</div>
         <div class="main-heading">Arina</div>
-        <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 20px;">Crafted with love by Shubham</p>
+        <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 15px;">Crafted with love by Shubham</p>
         <button class="btn-lux" onclick="Engine.nextSection(2)">Unwrap Experience</button>
       </div>
     </div>
@@ -339,14 +351,14 @@
       <div class="emoji-trigger-wrap" id="emoji-wrap" onclick="EmojiSystem.triggerJoy()">
         <span class="emoji-icon" id="emoji-target">😐</span>
       </div>
-      <div style="font-size: 1.1rem; letter-spacing: 3px; color: #ddd;" id="emoji-prompt">TAP TO IGNITE JOY</div>
+      <div style="font-size: 0.9rem; letter-spacing: 2px; color: #ddd;" id="emoji-prompt">TAP TO IGNITE JOY</div>
     </div>
 
     <!-- SEC 3: CHERRY BLOSSOM TREE -->
     <div class="section" id="sec-3">
       <canvas id="tree-canvas"></canvas>
-      <div class="main-heading" style="font-size: 2.2rem; margin-top: 5px;">Happy Birthday, Arina</div>
-      <p style="font-size:0.95rem; color:#ccc; margin-top:2px;">And just like that, you're turning 26 ✨</p>
+      <div class="main-heading" style="font-size: 1.8rem; margin-top: 5px;">Happy Birthday, Arina</div>
+      <p style="font-size:0.85rem; color:#ccc; margin-top:2px;">And just like that, you're turning 26 ✨</p>
       <button class="btn-lux" id="tree-next-btn" style="opacity: 0; pointer-events: none;" onclick="Engine.nextSection(4)">Continue</button>
     </div>
 
@@ -354,14 +366,14 @@
     <div class="section" id="sec-4">
       <div class="sub-title">TIME FOR CAKE 🎂</div>
       <canvas id="cake-canvas"></canvas>
-      <div class="main-heading" id="cake-text" style="font-size: 2rem; opacity: 0; transition: opacity 0.6s;">Happy Birthday, Arina!</div>
+      <div class="main-heading" id="cake-text" style="font-size: 1.6rem; opacity: 0; transition: opacity 0.6s;">Happy Birthday, Arina!</div>
       <button class="btn-lux" id="cake-next-btn" style="opacity: 0; pointer-events: none;" onclick="Engine.nextSection(5)">Make A Wish</button>
     </div>
 
     <!-- SEC 5: BALLOONS -->
     <div class="section" id="sec-5">
       <div class="sub-title">POP THE BALLOONS 🎈</div>
-      <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 10px;">Pop each glossy balloon to reveal why you're cherished.</p>
+      <p style="font-size: 0.75rem; color: #aaa; margin-bottom: 5px;">Tap each balloon to reveal why you're cherished.</p>
       <canvas id="balloon-canvas"></canvas>
       <div class="reasons-container" id="reasons-container"></div>
       <button class="btn-lux" id="balloon-next-btn" style="display: none;" onclick="Engine.nextSection(6)">Memories Await</button>
@@ -370,6 +382,7 @@
     <!-- SEC 6: GALLERY -->
     <div class="section" id="sec-6">
       <div class="sub-title">A WALK DOWN MEMORY LANE 📸</div>
+      <p style="font-size: 0.75rem; color: #888; margin-bottom: 10px;">(Swipe horizontally)</p>
       <div class="gallery-stage">
         <div class="polaroid-3d">
           <div class="polaroid-img-frame" style="background-image: url('https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80');"></div>
@@ -389,25 +402,27 @@
 
     <!-- SEC 7: LETTER -->
     <div class="section" id="sec-7">
-      <div class="sub-title" style="margin-bottom: 25px;">ONE LAST THING, ARINA...</div>
+      <div class="sub-title" style="margin-bottom: 20px;">ONE LAST THING, ARINA...</div>
       <div class="envelope-wrapper" onclick="document.getElementById('letter-modal').classList.add('open')">
-        <span style="font-size: 2.5rem; color: #fff;">✉️</span>
+        <span style="font-size: 2.2rem; color: #fff;">✉️</span>
       </div>
 
       <div class="letter-modal" id="letter-modal">
-        <h3 style="font-family:'Caveat', cursive; font-size: 2.2rem; color: #d63031; margin-bottom: 15px;">Dear Arina,</h3>
-        <p style="font-family:'Caveat', cursive; font-size: 1.4rem; line-height: 1.6; color: #333;">Happy Birthday 🎂 Baby</p>
-        <p style="font-family:'Caveat', cursive; font-size: 1.4rem; line-height: 1.6; color: #333; margin-top: 10px;">I still don't know how someone as genuine and beautiful as you stepped into my world, but every single day I am profoundly grateful for you. I hope this year wraps you in peace, surrounds you with warmth, and gives you countless little reasons to smile. You deserve all the happiness in the world 🌎</p>
-        <div style="text-align: right; font-family:'Caveat', cursive; font-size: 1.6rem; font-weight: 700; color: #d63031; margin-top: 20px;">With all my love,<br>— Shubham</div>
-        <button class="btn-lux" style="width: 100%; margin-top: 25px;" onclick="Engine.nextSection(8)">Grand Finale</button>
+        <div>
+          <h3 style="font-family:'Caveat', cursive; font-size: 2rem; color: #d63031; margin-bottom: 10px;">Dear Arina,</h3>
+          <p style="font-family:'Caveat', cursive; font-size: 1.25rem; line-height: 1.5; color: #333;">Happy Birthday 🎂 Baby</p>
+          <p style="font-family:'Caveat', cursive; font-size: 1.25rem; line-height: 1.5; color: #333; margin-top: 8px;">I still don't know how someone as genuine and beautiful as you stepped into my world, but every single day I am profoundly grateful for you. I hope this year wraps you in peace, surrounds you with warmth, and gives you countless little reasons to smile. You deserve all the happiness in the world 🌎</p>
+          <div style="text-align: right; font-family:'Caveat', cursive; font-size: 1.4rem; font-weight: 700; color: #d63031; margin-top: 15px;">With all my love,<br>— Shubham</div>
+        </div>
+        <button class="btn-lux" style="width: 100%; margin-top: 15px;" onclick="Engine.nextSection(8)">Grand Finale</button>
       </div>
     </div>
 
     <!-- SEC 8: FINALE -->
     <div class="section" id="sec-8">
       <canvas id="confetti-canvas"></canvas>
-      <div class="main-heading" style="font-size: 3.2rem; line-height: 1.2;">HAPPY BIRTHDAY<br>ARINA!</div>
-      <p style="font-size: 1.1rem; color: var(--accent-gold); margin-bottom: 30px;">FOREVER & ALWAYS — SHUBHAM ❤️</p>
+      <div class="main-heading" style="font-size: 2.4rem; line-height: 1.2;">HAPPY BIRTHDAY<br>ARINA!</div>
+      <p style="font-size: 0.95rem; color: var(--accent-gold); margin-bottom: 25px;">FOREVER & ALWAYS — SHUBHAM ❤️</p>
       <button class="btn-lux" onclick="Engine.restart()">Replay Preview 🔄</button>
     </div>
 
@@ -433,19 +448,14 @@
       },
 
       restart() {
-        // Cancel all animation frames
         TreeEngine.stop();
         CakeEngine.stop();
         BalloonEngine.stop();
         ConfettiSystem.stop();
 
-        // Reset Letter Modal
         document.getElementById('letter-modal').classList.remove('open');
-
-        // Reset Emoji System
         EmojiSystem.reset();
 
-        // Reset UI Elements & Buttons
         document.getElementById('tree-next-btn').style.opacity = '0';
         document.getElementById('tree-next-btn').style.pointerEvents = 'none';
 
@@ -456,7 +466,6 @@
         document.getElementById('balloon-next-btn').style.display = 'none';
         document.getElementById('reasons-container').innerHTML = '';
 
-        // Navigate back to section 1 fresh
         this.nextSection(1);
       }
     };
@@ -481,14 +490,14 @@
         }, 220);
 
         const colors = ['#ff758c', '#ffd700', '#00f2fe', '#4facfe', '#ff0844'];
-        for (let i = 0; i < 28; i++) {
+        for (let i = 0; i < 24; i++) {
           const s = document.createElement('div');
           s.className = 'burst-sparkle';
           const angle = Math.random() * Math.PI * 2;
-          const dist = Math.random() * 110 + 40;
+          const dist = Math.random() * 80 + 30;
           s.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
           s.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
-          s.style.width = `${Math.random() * 10 + 6}px`;
+          s.style.width = `${Math.random() * 8 + 5}px`;
           s.style.height = s.style.width;
           s.style.background = colors[Math.floor(Math.random() * colors.length)];
           s.style.left = '50%';
@@ -527,7 +536,7 @@
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
 
-        this.particles = Array.from({ length: 50 }).map(() => ({
+        this.particles = Array.from({ length: 35 }).map(() => ({
           x: Math.random() * this.canvas.width,
           y: Math.random() * this.canvas.height,
           r: Math.random() * 2 + 1,
@@ -559,17 +568,20 @@
         this.stop();
         this.canvas = document.getElementById('tree-canvas');
         this.ctx = this.canvas.getContext('2d');
-        this.canvas.width = this.canvas.offsetWidth;
-        this.canvas.height = this.canvas.offsetHeight;
+        
+        // DPR Scaling for crisp mobile displays
+        const rect = this.canvas.getBoundingClientRect();
+        this.canvas.width = rect.width;
+        this.canvas.height = rect.height;
 
         this.branches = [];
         this.petals = [];
         this.frame = 0;
 
         const startX = this.canvas.width / 2;
-        const startY = this.canvas.height - 20;
+        const startY = this.canvas.height - 15;
 
-        this.buildTree(startX, startY, -Math.PI / 2, 105, 14, 0);
+        this.buildTree(startX, startY, -Math.PI / 2, 75, 10, 0);
         this.animate = this.animate.bind(this);
         this.animId = requestAnimationFrame(this.animate);
       },
@@ -580,22 +592,22 @@
       },
 
       buildTree(x, y, angle, length, width, depth) {
-        if (depth > 8) return;
+        if (depth > 7) return;
 
         const endX = x + length * Math.cos(angle);
         const endY = y + length * Math.sin(angle);
 
-        this.branches.push({ x, y, endX, endY, width, depth, progress: 0, delay: depth * 12 });
+        this.branches.push({ x, y, endX, endY, width, depth, progress: 0, delay: depth * 10 });
 
-        if (depth >= 4) {
-          for (let i = 0; i < 4; i++) {
+        if (depth >= 3) {
+          for (let i = 0; i < 3; i++) {
             this.petals.push({
-              x: endX + (Math.random() - 0.5) * 45,
-              y: endY + (Math.random() - 0.5) * 45,
-              size: Math.random() * 6 + 4,
+              x: endX + (Math.random() - 0.5) * 35,
+              y: endY + (Math.random() - 0.5) * 35,
+              size: Math.random() * 5 + 3,
               rotation: Math.random() * Math.PI * 2,
               alpha: 0,
-              delay: depth * 12 + 40 + Math.random() * 60,
+              delay: depth * 10 + 30 + Math.random() * 50,
               color: ['#ffb7c5', '#ff94b8', '#f8a5c2', '#ffffff'][Math.floor(Math.random() * 4)]
             });
           }
@@ -629,7 +641,7 @@
 
         this.branches.forEach(b => {
           if (this.frame > b.delay) {
-            if (b.progress < 1) b.progress += 0.05;
+            if (b.progress < 1) b.progress += 0.06;
             const currentX = b.x + (b.endX - b.x) * b.progress;
             const currentY = b.y + (b.endY - b.y) * b.progress;
 
@@ -645,12 +657,12 @@
 
         this.petals.forEach(p => {
           if (this.frame > p.delay) {
-            if (p.alpha < 0.9) p.alpha += 0.03;
+            if (p.alpha < 0.9) p.alpha += 0.04;
             this.drawPetal(this.ctx, p.x, p.y, p.size, p.rotation, p.color, p.alpha);
           }
         });
 
-        if (this.frame > 150) {
+        if (this.frame > 120) {
           const btn = document.getElementById('tree-next-btn');
           btn.style.opacity = '1';
           btn.style.pointerEvents = 'auto';
@@ -668,8 +680,9 @@
         this.stop();
         this.canvas = document.getElementById('cake-canvas');
         this.ctx = this.canvas.getContext('2d');
-        this.canvas.width = this.canvas.offsetWidth;
-        this.canvas.height = this.canvas.offsetHeight;
+        const rect = this.canvas.getBoundingClientRect();
+        this.canvas.width = rect.width;
+        this.canvas.height = rect.height;
 
         const cx = this.canvas.width / 2;
         this.frame = 0;
@@ -677,17 +690,17 @@
         this.ignitionProgress = 0;
 
         this.layers = [
-          { y: -100, targetY: 310, w: 260, h: 70, vy: 0, settled: false, delay: 0, drips: [] },
-          { y: -200, targetY: 235, w: 200, h: 65, vy: 0, settled: false, delay: 8, drips: [] },
-          { y: -300, targetY: 165, w: 140, h: 60, vy: 0, settled: false, delay: 16, drips: [] }
+          { y: -100, targetY: 240, w: 200, h: 55, vy: 0, settled: false, delay: 0, drips: [] },
+          { y: -200, targetY: 180, w: 150, h: 50, vy: 0, settled: false, delay: 8, drips: [] },
+          { y: -300, targetY: 125, w: 105, h: 45, vy: 0, settled: false, delay: 16, drips: [] }
         ];
 
         this.layers.forEach(layer => {
-          const numDrips = Math.floor(layer.w / 22);
+          const numDrips = Math.floor(layer.w / 20);
           for (let i = 0; i < numDrips; i++) {
             layer.drips.push({
-              x: (cx - layer.w / 2) + 14 + i * 20 + (Math.random() * 6 - 3),
-              maxLen: Math.random() * 22 + 10,
+              x: (cx - layer.w / 2) + 10 + i * 18 + (Math.random() * 4 - 2),
+              maxLen: Math.random() * 16 + 8,
               len: 0,
               speed: Math.random() * 3 + 2
             });
@@ -704,8 +717,8 @@
       },
 
       drawPlate(cx, y) {
-        const rx = 160;
-        const ry = 28;
+        const rx = 120;
+        const ry = 22;
         const plateGrad = this.ctx.createRadialGradient(cx, y, 10, cx, y, rx);
         plateGrad.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
         plateGrad.addColorStop(0.7, 'rgba(200, 200, 220, 0.15)');
@@ -716,7 +729,7 @@
         this.ctx.fillStyle = plateGrad;
         this.ctx.fill();
         this.ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-        this.ctx.lineWidth = 2;
+        this.ctx.lineWidth = 1.5;
         this.ctx.stroke();
       },
 
@@ -733,19 +746,19 @@
 
         this.ctx.fillStyle = cakeGrad;
         this.ctx.beginPath();
-        this.ctx.roundRect(x, y, l.w, l.h, [8, 8, 12, 12]);
+        this.ctx.roundRect(x, y, l.w, l.h, [6, 6, 10, 10]);
         this.ctx.fill();
 
         this.ctx.fillStyle = '#ffedd8';
-        this.ctx.fillRect(x + 2, y + l.h * 0.52, l.w - 4, 6);
+        this.ctx.fillRect(x + 2, y + l.h * 0.52, l.w - 4, 4);
 
-        const icingGrad = this.ctx.createLinearGradient(x, y, x, y + 18);
+        const icingGrad = this.ctx.createLinearGradient(x, y, x, y + 14);
         icingGrad.addColorStop(0, '#ffffff');
         icingGrad.addColorStop(1, '#f3e5d8');
 
         this.ctx.fillStyle = icingGrad;
         this.ctx.beginPath();
-        this.ctx.roundRect(x, y, l.w, 18, [8, 8, 2, 2]);
+        this.ctx.roundRect(x, y, l.w, 14, [6, 6, 2, 2]);
         this.ctx.fill();
 
         if (l.settled) {
@@ -753,15 +766,15 @@
             if (d.len < d.maxLen) d.len += d.speed;
             this.ctx.fillStyle = '#f3e5d8';
             this.ctx.beginPath();
-            this.ctx.roundRect(d.x - 3.5, y + 14, 7, d.len, 4);
+            this.ctx.roundRect(d.x - 2.5, y + 10, 5, d.len, 3);
             this.ctx.fill();
           });
         }
       },
 
       drawRealisticCandle(cx, topY) {
-        const candleW = 12;
-        const candleH = 45;
+        const candleW = 10;
+        const candleH = 35;
         const x = cx - candleW / 2;
         const y = topY - candleH;
 
@@ -773,37 +786,37 @@
 
         this.ctx.fillStyle = candleGrad;
         this.ctx.beginPath();
-        this.ctx.roundRect(x, y, candleW, candleH, [3, 3, 1, 1]);
+        this.ctx.roundRect(x, y, candleW, candleH, [2, 2, 1, 1]);
         this.ctx.fill();
 
         this.ctx.beginPath();
         this.ctx.moveTo(cx, y);
-        this.ctx.lineTo(cx, y - 8);
+        this.ctx.lineTo(cx, y - 6);
         this.ctx.strokeStyle = '#222';
-        this.ctx.lineWidth = 2;
+        this.ctx.lineWidth = 1.5;
         this.ctx.stroke();
 
-        return { x: cx, y: y - 8 };
+        return { x: cx, y: y - 6 };
       },
 
       drawRealisticFire(wickX, wickY) {
         if (!this.flameIgnited) return;
 
         if (this.ignitionProgress < 1) this.ignitionProgress += 0.1;
-        const scale = this.ignitionProgress;
+        const scale = this.ignitionProgress * 0.85;
 
         const time = Date.now() * 0.012;
-        const waverX = Math.sin(time * 2.5) * 2.5 * scale;
-        const waverY = Math.cos(time * 1.8) * 1.5 * scale;
+        const waverX = Math.sin(time * 2.5) * 2 * scale;
+        const waverY = Math.cos(time * 1.8) * 1.2 * scale;
 
-        const glowGrad = this.ctx.createRadialGradient(wickX, wickY - 12, 2, wickX, wickY - 12, 65 * scale);
+        const glowGrad = this.ctx.createRadialGradient(wickX, wickY - 10, 2, wickX, wickY - 10, 50 * scale);
         glowGrad.addColorStop(0, 'rgba(255, 180, 50, 0.5)');
         glowGrad.addColorStop(0.5, 'rgba(255, 80, 0, 0.18)');
         glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
         this.ctx.fillStyle = glowGrad;
         this.ctx.beginPath();
-        this.ctx.arc(wickX, wickY - 12, 65 * scale, 0, Math.PI * 2);
+        this.ctx.arc(wickX, wickY - 10, 50 * scale, 0, Math.PI * 2);
         this.ctx.fill();
 
         this.ctx.save();
@@ -812,10 +825,10 @@
 
         this.ctx.beginPath();
         this.ctx.moveTo(0, 0);
-        this.ctx.bezierCurveTo(-11 + waverX, -10, -13 + waverX, -28 + waverY, 0 + waverX, -42 + waverY);
-        this.ctx.bezierCurveTo(13 + waverX, -28 + waverY, 11 + waverX, -10, 0, 0);
+        this.ctx.bezierCurveTo(-9 + waverX, -8, -11 + waverX, -22 + waverY, 0 + waverX, -34 + waverY);
+        this.ctx.bezierCurveTo(11 + waverX, -22 + waverY, 9 + waverX, -8, 0, 0);
 
-        const outerFlameGrad = this.ctx.createLinearGradient(0, 0, 0, -42);
+        const outerFlameGrad = this.ctx.createLinearGradient(0, 0, 0, -34);
         outerFlameGrad.addColorStop(0, 'rgba(255, 60, 0, 0.95)');
         outerFlameGrad.addColorStop(0.5, 'rgba(255, 140, 0, 0.88)');
         outerFlameGrad.addColorStop(1, 'rgba(255, 215, 0, 0)');
@@ -824,19 +837,14 @@
 
         this.ctx.beginPath();
         this.ctx.moveTo(0, -2);
-        this.ctx.bezierCurveTo(-6 + waverX * 0.5, -8, -7 + waverX * 0.5, -20, 0 + waverX * 0.5, -30);
-        this.ctx.bezierCurveTo(7 + waverX * 0.5, -20, 6 + waverX * 0.5, -8, 0, -2);
+        this.ctx.bezierCurveTo(-5 + waverX * 0.5, -6, -6 + waverX * 0.5, -16, 0 + waverX * 0.5, -24);
+        this.ctx.bezierCurveTo(6 + waverX * 0.5, -16, 5 + waverX * 0.5, -6, 0, -2);
 
-        const innerFlameGrad = this.ctx.createLinearGradient(0, 0, 0, -30);
+        const innerFlameGrad = this.ctx.createLinearGradient(0, 0, 0, -24);
         innerFlameGrad.addColorStop(0, '#ffffff');
         innerFlameGrad.addColorStop(0.6, '#ffd700');
         innerFlameGrad.addColorStop(1, 'rgba(255, 165, 0, 0)');
         this.ctx.fillStyle = innerFlameGrad;
-        this.ctx.fill();
-
-        this.ctx.beginPath();
-        this.ctx.ellipse(0, -4, 3, 6, 0, 0, Math.PI * 2);
-        this.ctx.fillStyle = 'rgba(60, 140, 255, 0.9)';
         this.ctx.fill();
 
         this.ctx.restore();
@@ -847,7 +855,7 @@
         this.frame++;
 
         const cx = this.canvas.width / 2;
-        this.drawPlate(cx, 375);
+        this.drawPlate(cx, 290);
 
         let allSettled = true;
 
@@ -909,8 +917,9 @@
         this.stop();
         this.canvas = document.getElementById('balloon-canvas');
         this.ctx = this.canvas.getContext('2d');
-        this.canvas.width = this.canvas.offsetWidth;
-        this.canvas.height = this.canvas.offsetHeight;
+        const rect = this.canvas.getBoundingClientRect();
+        this.canvas.width = rect.width;
+        this.canvas.height = rect.height;
 
         this.poppedCount = 0;
 
@@ -926,9 +935,9 @@
 
         this.balloons = this.reasons.map((r, i) => ({
           x: spacing * (i + 1),
-          y: 130 + (i % 2) * 25,
-          rx: 32,
-          ry: 42,
+          y: 85 + (i % 2) * 15,
+          rx: 22,
+          ry: 30,
           color: colors[i],
           popped: false,
           idx: i,
@@ -936,6 +945,12 @@
         }));
 
         this.canvas.onclick = (e) => this.click(e);
+        this.canvas.ontouchstart = (e) => {
+          e.preventDefault();
+          const touch = e.touches[0];
+          this.click(touch);
+        };
+
         this.animate = this.animate.bind(this);
         this.animId = requestAnimationFrame(this.animate);
       },
@@ -953,7 +968,7 @@
         this.balloons.forEach(b => {
           if (!b.popped) {
             const dist = Math.hypot(b.x - mx, b.y - my);
-            if (dist < b.ry) {
+            if (dist < b.ry + 10) { // Slightly increased tap target area for mobile fingers
               b.popped = true;
               this.poppedCount++;
               this.reveal(b.idx);
@@ -966,27 +981,30 @@
         const container = document.getElementById('reasons-container');
         const card = document.createElement('div');
         card.className = 'reason-card';
-        card.innerHTML = `<div style="font-size:0.7rem; color:var(--accent-gold); letter-spacing:2px; font-weight:600; margin-bottom:4px;">REASON NO. 0${idx + 1}</div><div>${this.reasons[idx]}</div>`;
+        card.innerHTML = `<div style="font-size:0.65rem; color:var(--accent-gold); letter-spacing:1.5px; font-weight:600; margin-bottom:2px;">REASON NO. 0${idx + 1}</div><div>${this.reasons[idx]}</div>`;
         container.appendChild(card);
 
-        setTimeout(() => card.classList.add('visible'), 50);
+        setTimeout(() => {
+          card.classList.add('visible');
+          container.scrollTop = container.scrollHeight;
+        }, 50);
 
         if (this.poppedCount === this.reasons.length) {
-          setTimeout(() => { document.getElementById('balloon-next-btn').style.display = 'inline-block'; }, 600);
+          setTimeout(() => { document.getElementById('balloon-next-btn').style.display = 'inline-block'; }, 400);
         }
       },
 
       drawRealisticBalloon(ctx, b) {
-        const floatY = b.y + Math.sin((Date.now() / 400) + b.floatOffset) * 6;
+        const floatY = b.y + Math.sin((Date.now() / 400) + b.floatOffset) * 4;
 
         ctx.beginPath();
         ctx.moveTo(b.x, floatY + b.ry);
-        ctx.bezierCurveTo(b.x - 8, floatY + b.ry + 20, b.x + 8, floatY + b.ry + 40, b.x, floatY + b.ry + 55);
+        ctx.bezierCurveTo(b.x - 6, floatY + b.ry + 15, b.x + 6, floatY + b.ry + 30, b.x, floatY + b.ry + 40);
         ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 1.2;
         ctx.stroke();
 
-        const grad = ctx.createRadialGradient(b.x - 10, floatY - 12, 4, b.x, floatY, b.ry);
+        const grad = ctx.createRadialGradient(b.x - 6, floatY - 8, 2, b.x, floatY, b.ry);
         grad.addColorStop(0, '#ffffff');
         grad.addColorStop(0.3, b.color.main);
         grad.addColorStop(1, b.color.dark);
@@ -997,9 +1015,9 @@
         ctx.fill();
 
         ctx.beginPath();
-        ctx.moveTo(b.x - 4, floatY + b.ry);
-        ctx.lineTo(b.x + 4, floatY + b.ry);
-        ctx.lineTo(b.x, floatY + b.ry + 6);
+        ctx.moveTo(b.x - 3, floatY + b.ry);
+        ctx.lineTo(b.x + 3, floatY + b.ry);
+        ctx.lineTo(b.x, floatY + b.ry + 5);
         ctx.fillStyle = b.color.dark;
         ctx.fill();
       },
@@ -1034,14 +1052,14 @@
           { main: '#a29bfe', highlight: '#e0ddff' }
         ];
 
-        this.particles = Array.from({ length: 140 }).map(() => ({
+        this.particles = Array.from({ length: 90 }).map(() => ({
           x: Math.random() * this.canvas.width,
           y: Math.random() * -this.canvas.height,
-          w: Math.random() * 10 + 6,
-          h: Math.random() * 6 + 4,
+          w: Math.random() * 8 + 5,
+          h: Math.random() * 5 + 3,
           color: colors[Math.floor(Math.random() * colors.length)],
-          vy: Math.random() * 2.8 + 1.8,
-          vx: Math.random() * 1.5 - 0.75,
+          vy: Math.random() * 2.5 + 1.5,
+          vx: Math.random() * 1.2 - 0.6,
           rotX: Math.random() * Math.PI * 2,
           rotY: Math.random() * Math.PI * 2,
           rotZ: Math.random() * Math.PI * 2,
